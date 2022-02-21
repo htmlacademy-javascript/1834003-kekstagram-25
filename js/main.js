@@ -4,18 +4,11 @@ const getRandomInteger = (min, max) => {
   }
   min = Math.ceil(min);
   max = Math.floor(max);
-  const numberValue = (Math.random() * (max - min + 1)) + min;
-  return Math.floor(numberValue);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 getRandomInteger(0, 50);
 
-const getStringCheck = (stringCheck, maxLength) => {
-  const stringLength = stringCheck.length;
-  if (stringLength <= maxLength) {
-    return true;
-  }
-  return false;
-};
+const getStringCheck = (stringCheck, maxLength) => stringCheck.length <= maxLength;
 
 getStringCheck('', 140);
