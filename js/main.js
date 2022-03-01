@@ -1,16 +1,4 @@
-const getRandomInteger = (min, max) => {
-  if (min < 0 || max < 0) {
-    return -1;
-  }
-  if (min > max) {
-    [min, max] = [max, min];
-  }
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-const getStringCheck = (stringCheck, maxLength) => stringCheck.length <= maxLength;
-
-getStringCheck('', 140);
+const PHOTO_COUNT = 25;
 
 const MESSAGES_USERS = [
   'Всё отлично!',
@@ -30,34 +18,39 @@ const NAMES_USERS = [
   'Настя',
 ];
 
+const getRandomInteger = (min, max) => {
+  if (min < 0 || max < 0) {
+    return -1;
+  }
+  if (min > max) {
+    [min, max] = [max, min];
+  }
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 const createComment = () => ({
-  avatar: `img/avatar-${  [getRandomInteger(1, 6)]  }.svg`,
+  avatar: `img/avatar-${ getRandomInteger(1, 6) }.svg`,
   message: getRandomArrayElement(MESSAGES_USERS),
   name: getRandomArrayElement(NAMES_USERS),
-  id: Math.floor(Math.random()),
+  id: Math.random().toFixed(3) * 1000,
 });
 
-const comments = Array.from({length: 2}, createComment);
-
-//console.log(comments);
-
 let numberId = 0;
-let photosDescriptions = [''];
+let photosDescriptions = [];
 
 const createPhotoDescription = () => {
-  for (let i = 0; i < photosDescriptions.length; i++) {
-    numberId ++;
-    return {
-      id: numberId,
-      url:`photos/${  numberId  }.jpg`,
-      description: 'Фотография в стиле KEKSOGRAM',
-      likes: getRandomInteger(15, 200),
-      comments: comments,
-    };
-  }
+  numberId++;
+  return {
+    id: numberId,
+    url:`photos/${ numberId }.jpg`,
+    description: 'Фотография в стиле KEKSOGRAM',
+    likes: getRandomInteger(15, 200),
+    comments: Array.from({length: getRandomInteger(0, 5)}, createComment),
+  };
 };
 
-photosDescriptions = Array.from({length: 25}, createPhotoDescription);
-//console.log(photosDescriptions);
+photosDescriptions = Array.from({length: PHOTO_COUNT}, createPhotoDescription);
+
+photosDescriptions();
