@@ -25,11 +25,38 @@ const onModalEscKeydown = (evt) => {
   }
 };
 
+const containerComments = bigPicture.querySelector('.social__comments');
+const templateComment = containerComments.querySelector('.social__comment');
+
+const similarListFragment = document.createDocumentFragment();
+
+const renderComment = (comment) => {
+  const commentElement = templateComment.cloneNode(true);
+  commentElement.querySelector('.social__picture').src = comment.avatar;
+  commentElement.querySelector('.social__picture').alt = comment.name;
+  commentElement.querySelector('.social__text').textContent = comment.message;
+
+  return commentElement;
+};
+
+const renderComments = (comments) => {
+  containerComments.innerHTML = '';
+
+  comments.forEach((comment) => {
+    similarListFragment.appendChild(renderComment(comment));
+  });
+
+  containerComments.appendChild(similarListFragment);
+};
+
 const showBigPicture = (photo) => {
   bigPicturePhoto.src = photo.url;
   bigPictureCommentsCount.textContent = photo.comments.length;
   bigPictureLikes.textContent = photo.likes;
   bigPictureCaption.textContent = photo.description;
+
+  renderComments(photo.comments);
+
   bigPicture.classList.remove('hidden');
   hideBlockCommentCount.classList.add('hidden');
   hideBlockCommentsLoader.classList.add('hidden');
@@ -37,26 +64,5 @@ const showBigPicture = (photo) => {
   closeButton.addEventListener('click', onCloseBigPictureClick);
   document.addEventListener('keydown', onModalEscKeydown);
 };
-
-/*const containerComments = bigPicture.querySelector('.social__comments');
-const templateComment = bigPicture.querySelector('.social__comments').content.querySelector('.social__comment');
-
-const similarListFragment = document.createDocumentFragment();
-
-const renderComment = (comment) => {
-  const commentElement = templateComment.cloneNode(true);
-  commentElement.querySelector('.social__picture').src = comment.avatar;
-  commentElement.querySelector('.social__text').textContent = comment.message;
-
-  return commentElement;
-};
-
-const renderComments = (photo) => {
-  (photo.comments).forEach((comment) => {
-    similarListFragment.appendChild(renderComment(comment));
-  });
-
-  containerComments.appendChild(similarListFragment);
-};*/
 
 export {showBigPicture};
