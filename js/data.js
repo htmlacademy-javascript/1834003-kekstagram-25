@@ -27,8 +27,9 @@ const createComment = () => ({
   id: Math.random().toFixed(3) * 1000,
 });
 
+
 let numberId = 0;
-let photosDescriptions = [];
+let photos = [];
 
 const createPhotoDescription = () => {
   numberId++;
@@ -41,6 +42,6 @@ const createPhotoDescription = () => {
   };
 };
 
-photosDescriptions = () => Array.from({length: PHOTO_COUNT}, createPhotoDescription);
+photos = () => Array.from({length: PHOTO_COUNT}, createPhotoDescription);
 
-export {photosDescriptions};
+export {photos};
