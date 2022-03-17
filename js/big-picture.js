@@ -10,9 +10,11 @@ const bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
 const bigPictureCaption = bigPicture.querySelector('.social__caption');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
+const closeModalBody = () => body.classList.remove('modal-open');
+
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
-  body.classList.remove('modal-open');
+  closeModalBody();
 
   //document.removeEventListener('keydown', onModalEscKeydown);
 };
@@ -49,6 +51,8 @@ const renderComments = (comments) => {
   containerComments.appendChild(similarListFragment);
 };
 
+const openModalBody = () => body.classList.add('modal-open');
+
 const showBigPicture = (photo) => {
   bigPicturePhoto.src = photo.url;
   bigPictureCommentsCount.textContent = photo.comments.length;
@@ -60,9 +64,9 @@ const showBigPicture = (photo) => {
   bigPicture.classList.remove('hidden');
   hideBlockCommentCount.classList.add('hidden');
   hideBlockCommentsLoader.classList.add('hidden');
-  body.classList.add('modal-open');
+  openModalBody();
   closeButton.addEventListener('click', onCloseBigPictureClick);
   document.addEventListener('keydown', onModalEscKeydown);
 };
 
-export {showBigPicture};
+export {showBigPicture, openModalBody, closeModalBody};
