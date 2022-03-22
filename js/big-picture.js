@@ -16,7 +16,8 @@ const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   closeModalBody();
 
-  //document.removeEventListener('keydown', onModalEscKeydown);
+  closeButton.removeEventListener('click', onCloseBigPictureClick);
+  document.removeEventListener('keydown', onModalEscKeydown);
 };
 
 const onCloseBigPictureClick = () => closeBigPicture();
