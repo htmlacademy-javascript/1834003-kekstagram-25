@@ -1,16 +1,10 @@
 import {openModalBody, closeModalBody} from './big-picture.js';
 import {isEscapeKey} from './util.js';
-
-const MAX_HASHTAGS = 5;
-
-const form = document.querySelector('#upload-select-image');
-
-const pristine = new Pristine(form);
+import {textHashtags, form} from './form-hashtags.js';
 
 const imgFile = form.querySelector('#upload-file');
 const imgEditor = form.querySelector('.img-upload__overlay');
 const closeButton = imgEditor.querySelector('#upload-cancel');
-const textHashtags = imgEditor.querySelector('.text__hashtags');
 
 const closeEditorForm = () => {
   imgEditor.classList.add('hidden');
@@ -37,41 +31,34 @@ imgFile.addEventListener('change', () => {
   document.addEventListener('keydown', onEditorFormEscKeydown);
 });
 
-const onHashTagsInput = () => {
+//Создаём зум
 
-  const re = /^#[a-zа-яё0-9]{1,19}$/i;
-  const parts = textHashtags.value.trim().toLowerCase().split(/\s+/);
-
-  if (parts.length === 0) {
-    return;
-  }
-
-  const isValid = parts.every((hashtag) => re.test(hashtag));
-  console.log(parts, isValid);
-  if (!isValid) {
-    //ошибка
-    console.log('не валиден');
-  }
-
-  for (let i = 0; i < parts.length; i++) {
-    for (let j = i+1; j < parts.length; j++) {
-      if (parts[i] === parts[j])
-      //ошибка
-      console.log('одинаковый хэш-тег');
-    }
-  }
-
-  if (parts.length > MAX_HASHTAGS) {
-    //ошибка
-    console.log ('Больше 5 хеш-тегов');
-  }
+const Zoom = {
+  MIN: 25,
+  MAX: 100,
+  STEP: 25,
 };
 
-textHashtags.addEventListener('input', onHashTagsInput);
+const scaleValue = imgEditor.querySelector('.scale__control--value');
+const вuttonMinus = imgEditor.querySelector('.scale__control--smaller');
+const вuttonPlus = imgEditor.querySelector('.scale__control--bigger');
 
-//pristine.addValidator(textHashtags, isValid, 'Хэш-тег не соответствует правилам.');
+const percentNumber = Zoom.MAX;
+scaleValue.value = `${percentNumber} %`;
 
-/*form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});*/
+вuttonMinus.addEventListener('click', () => {
+  const newValue = percentNumber - Zoom.STEP;
+
+  if (newValue > Zoom.MIN) {
+    scaleValue.value = newValue;
+  }
+});
+
+вuttonPlus.addEventListener('click', () => {
+  const newValue = +scaleValue.value + Zoom.STEP;
+
+  if (newValue >= Zoom.MIN && newValue <= 75) {
+    scaleValue.value = newValue;
+  }
+
+});
