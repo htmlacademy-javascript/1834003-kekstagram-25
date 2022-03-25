@@ -35,7 +35,7 @@
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
-              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" required>
+              <input type="file" id="upload-file" class="img-upload__input  visually-hidden" name="filename" accept="image/*" required>
               <label for="upload-file" class="img-upload__label  img-upload__control">Загрузить</label>
             </fieldset>
 
@@ -116,9 +116,13 @@
 
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
-                  <input type="text" class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
-                  <textarea class="text__description" name="description" maxlength="140" placeholder="Ваш комментарий..."></textarea>
-                </fieldset>
+                  <div class="img-upload__item">
+                    <input type="text" class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
+                  </div>
+                  <div class="img-upload__item">
+                    <textarea class="text__description" name="description" maxlength="140" placeholder="Ваш комментарий..."></textarea>
+                  </div>
+                  </fieldset>
 
                 <!-- Кнопка для отправки данных на сервер -->
                 <button type="submit" class="img-upload__submit" id="upload-submit">Опубликовать</button>
