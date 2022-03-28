@@ -47,7 +47,7 @@ const hashtagsHandler = (value) => {
       error: 'Хеш-теги разделяюся пробелом',
     },
     {
-      check: inputArray.some((item, num, arr) => arr.includes(item, num + 1)),
+      check: inputArray.some((item, index, array) => array.includes(item, index + 1)),
       error: 'Хеш-теги не должны повторяться',
     },
     {

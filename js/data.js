@@ -38,7 +38,7 @@ const createPhotoDescription = () => {
     url:`photos/${ numberId }.jpg`,
     description: 'Фотография в стиле KEKSOGRAM',
     likes: getRandomInteger(15, 200),
-    comments: Array.from({length: getRandomInteger(0, 5)}, createComment),
+    comments: Array.from({length: getRandomInteger(0, 15)}, createComment),
   };
 };
 
