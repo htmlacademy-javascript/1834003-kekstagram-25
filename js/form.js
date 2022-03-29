@@ -1,35 +1,50 @@
 import {openModalBody, closeModalBody} from './big-picture.js';
-import {isEscapeKey} from './util.js';
+import {closeOnModalEscKeydown} from './util.js';
 import {textHashtags, form} from './form-hashtags.js';
 
 const imgFile = form.querySelector('#upload-file');
 const imgEditor = form.querySelector('.img-upload__overlay');
 const closeButton = imgEditor.querySelector('#upload-cancel');
 
+
 const closeEditorForm = () => {
   imgEditor.classList.add('hidden');
   closeModalBody();
+
   form.reset();
+};
+
+
+const onEditorFormEscKeydown = (evt) => {
+
+  closeOnModalEscKeydown(evt, () => {
+
+    if (evt.target !== textHashtags && !evt.target.classList.contains('text__description')) {
+      closeEditorForm();
+      document.removeEventListener('keydown', onEditorFormEscKeydown);
+    }
+
+  });
+
+};
+
+
+const onCloseEditorForm = () => {
+  closeEditorForm();
+
   closeButton.removeEventListener('click', onCloseEditorForm);
   document.removeEventListener('keydown', onEditorFormEscKeydown);
 };
 
-const onCloseEditorForm = () => closeEditorForm();
-
-const onEditorFormEscKeydown = (evt) => {
-  if (isEscapeKey(evt) && evt.target !== textHashtags && !evt.target.classList.contains('text__description')) {
-    closeEditorForm();
-  }
-};
 
 imgFile.addEventListener('change', () => {
   imgEditor.classList.remove('hidden');
-
   openModalBody();
 
   closeButton.addEventListener('click', onCloseEditorForm);
   document.addEventListener('keydown', onEditorFormEscKeydown);
 });
+
 
 //Создаём зум
 
