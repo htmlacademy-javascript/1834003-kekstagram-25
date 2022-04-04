@@ -65,8 +65,8 @@ const hashtagsHandler = (value) => {
   ];
 
   return rules.every((rule) => {
-    const isInvalid = rule.check;
 
+    const isInvalid = rule.check;
     if (isInvalid) {
       errorMessage = rule.error;
     }
