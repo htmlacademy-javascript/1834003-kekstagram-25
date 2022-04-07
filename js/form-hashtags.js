@@ -1,7 +1,16 @@
+import {request} from './fetch.js';
+
 const MAX_HASHTAGS = 5;
 const MAX_SYMBOLS = 20;
 
-const form = document.querySelector('#upload-select-image');
+const body = document.querySelector('body');
+
+const form = body.querySelector('#upload-select-image');
+
+const textHashtags = form.querySelector('.text__hashtags');
+const button = form.querySelector('#upload-submit');
+
+const errorForm = body.querySelector('#error');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__item',
@@ -12,8 +21,6 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error',
 });
 
-const textHashtags = form.querySelector('.text__hashtags');
-const button = form.querySelector('#upload-submit');
 
 let errorMessage = '';
 const error = () => errorMessage;
@@ -88,4 +95,22 @@ const onHashTagInput = () => {
 
 textHashtags.addEventListener('input', onHashTagInput);
 
-export {textHashtags, form};
+const onError = () => {
+  errorForm;
+};
+
+const setFormSubmit = (onSuccess) => {
+
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      request(onSuccess, onError, 'POST', formData);
+    }
+  });
+
+};
+
+export {textHashtags, form, setFormSubmit};

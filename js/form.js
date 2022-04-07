@@ -195,3 +195,4 @@ sliderElement.noUiSlider.on('change', () => {
   preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
 });
 
+export {closeEditorForm};
