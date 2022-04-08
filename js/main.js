@@ -7,7 +7,7 @@ import './form.js';
 const PHOTO_COUNT = 25;
 
 const onError = () => {
-  showAlert('Нет доступа к серверу. Попробуте еще раз.');
+  showAlert('Нет доступа к серверу. Попробуйте еще раз.');
 };
 
 let userPhotos = [];

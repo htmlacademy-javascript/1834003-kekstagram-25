@@ -12,6 +12,7 @@ const bigPictureCaption = bigPicture.querySelector('.social__caption');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const containerComments = bigPicture.querySelector('.social__comments');
 const templateComment = containerComments.querySelector('.social__comment');
+const socialFooterText = bigPicture.querySelector('.social__footer-text');
 
 
 let totalComments = COMMENTS_STEP;
@@ -73,6 +74,7 @@ const closeBigPicture = () => {
 
   totalComments = COMMENTS_STEP;
   arrayCommets = [];
+  socialFooterText.value = '';
 };
 
 

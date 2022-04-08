@@ -44,15 +44,10 @@ const sliderElement = effectsLevel.querySelector('.effect-level__slider');
 const effectLevelValue = effectsLevel.querySelector('.effect-level__value');
 
 const templateSuccess = body.querySelector('#success').content.querySelector('.success');
-//const containerSuccess = body.querySelector('.success');
-//const successButton = containerSuccess.querySelector('.success__button');
 const templateError = body.querySelector('#error').content.querySelector('.error');
-//const containerError = body.querySelector('.error');
-//const errorButton = containerError.querySelector('.error__button');
 
 
 let currentEffect = '';
-
 
 const closeEditorForm = () => {
   imgEditor.classList.add('hidden');
@@ -70,7 +65,7 @@ const onEditorFormEscKeydown = (evt) => {
 
   closeOnModalEscKeydown(evt, () => {
 
-    if (evt.target !== textHashtags && !evt.target.classList.contains('text__description')) {
+    if (evt.target !== textHashtags && !evt.target.classList.contains('text__description') && document.querySelector('.error') === null) {
       closeEditorForm();
       document.removeEventListener('keydown', onEditorFormEscKeydown);
     }
@@ -159,10 +154,9 @@ const effects = {
 
   heat: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `brightness(${((parseInt(effectLevelValue.value < 10 ? 1 + effectLevelValue.value : effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE) * Options.RATIO).toFixed(1)})`;
-    //return `brightness(${(parseInt(effectLevelValue.value < 100 ? effectLevelValue.value++ : effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE) * Options.RATIO})`;
+    const effect = parseFloat((parseFloat(effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE * Options.RATIO).toFixed(1), BASE);
+    return `brightness(${effect < 1 ? 1 : effect})`;
   },
-
 };
 
 
@@ -185,7 +179,6 @@ const onEffectsListClick = (evt) => {
     preview.classList.add(target.classList[1]);
 
     preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
-
   }
 
 };
@@ -197,6 +190,7 @@ noUiSlider.create(sliderElement, {
     min: Slider.MIN,
     max: Slider.MAX,
   },
+
   start: Slider.START,
   step: Slider.STEP,
   connect: 'lower',
@@ -205,42 +199,47 @@ noUiSlider.create(sliderElement, {
 sliderElement.noUiSlider.on('change', () => {
   effectLevelValue.value = sliderElement.noUiSlider.get();
   preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
-  console.log(preview.style.filter);
 });
 
 
-const forRequestMessageForm = (template, container) => {
+const showAlertMessage = (template, container, overlayClass) => {
   const similarListFragment = document.createDocumentFragment();
   const fragmentElement = template.cloneNode(true);
+
+  fragmentElement.style.zIndex = 100;
 
   similarListFragment.appendChild(fragmentElement);
   container.appendChild(similarListFragment);
 
-  fragmentElement.style.zIndex = 100;
+  const overlay = document.querySelector(`.${overlayClass}`);
 
-  fragmentElement.querySelector('button').addEventListener('click', (evt) => {
+  const onOverlayClick = (evt) => {
     evt.preventDefault();
-    fragmentElement.remove();
+
+    if (evt.target.tagName === 'SECTION' || evt.target.tagName === 'BUTTON') {
+      overlay.remove();
+    }
+
+  };
+
+  overlay.addEventListener('click', onOverlayClick);
+
+  const onRequestMessageEscKeydown = (evt) => closeOnModalEscKeydown(evt, () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onRequestMessageEscKeydown);
   });
 
-  const onRequestMessageEscKeydown = (evt) => closeOnModalEscKeydown(evt, () =>fragmentElement.remove());
   document.addEventListener('keydown', onRequestMessageEscKeydown);
 };
 
 
-const onError = () => {
-  forRequestMessageForm(templateError, body);
-  // клонирование сообщения
-
-};
+const onError = () => showAlertMessage(templateError, body, 'error');
 
 
 const onSuccess = () => {
-  // очистить форму сбросить фильтры вернуть зум закрыть форму
   closeEditorForm();
 
-  // клонирование сообщения
-  forRequestMessageForm(templateSuccess, body);
+  showAlertMessage(templateSuccess, body, 'success');
 };
 
 
