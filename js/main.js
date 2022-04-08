@@ -1,18 +1,21 @@
-//import {photos} from './data.js';
-//import {renderPhotos} from './creating-pictures.js';
-import './creating-pictures.js';
-import {closeEditorForm} from './form.js';
-import {setFormSubmit} from './form-hashtags.js';
-import './fetch.js';
+import {showAlert} from './util.js';
+import {request} from './fetch.js';
+import {renderPhotos} from './creating-pictures.js';
+import './form.js';
 
 
-setFormSubmit(closeEditorForm);
+const PHOTO_COUNT = 25;
 
+const onError = () => {
+  showAlert('Нет доступа к серверу. Попробуте еще раз.');
+};
 
-//renderPhotos(photos());
+let userPhotos = [];
 
-/*fetch ('https://25.javascript.pages.academy/kekstagram/data')
-  .then((response) => response.json())
-  .then((data) => {
+const onSuccess = (data) => {
+  userPhotos = data.slice();
 
-  });*/
+  renderPhotos(userPhotos.slice(0, PHOTO_COUNT));
+};
+
+request(onSuccess, onError, 'GET');

@@ -1,7 +1,4 @@
 import {showBigPicture} from './big-picture.js';
-import {request} from './fetch.js';
-
-const PHOTO_COUNT = 25;
 
 const containerPictures = document.querySelector('.pictures');
 const templatePicture = document.querySelector('#picture').content.querySelector('.picture');
@@ -31,20 +28,4 @@ const renderPhotos = (photos) => {
   containerPictures.appendChild(similarListFragment);
 };
 
-const onError = () => {
-  alert('Нет доступа к серверу.');
-};
-
-let userPhotos = [];
-
-const onSuccess = (data) => {
-  userPhotos = data.slice();
-  const photos = userPhotos.slice(0, PHOTO_COUNT);
-  renderPhotos(photos);
-};
-
-//const SetPhotos = userPhotos.slice(0, PHOTO_COUNT);
-
-request(onSuccess, onError, 'GET');
-
-//export {renderPhotos};
+export {renderPhotos};

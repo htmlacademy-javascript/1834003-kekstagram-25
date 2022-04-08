@@ -1,5 +1,3 @@
-import {request} from './fetch.js';
-
 const MAX_HASHTAGS = 5;
 const MAX_SYMBOLS = 20;
 
@@ -9,8 +7,6 @@ const form = body.querySelector('#upload-select-image');
 
 const textHashtags = form.querySelector('.text__hashtags');
 const button = form.querySelector('#upload-submit');
-
-const errorForm = body.querySelector('#error');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__item',
@@ -88,29 +84,9 @@ pristine.addValidator(textHashtags, hashtagsHandler, error);
 
 
 const onHashTagInput = () => {
-  if (pristine.validate()) {
-    button.disabled = false;
-  } else {button.disabled = true;}
+  button.disabled = !pristine.validate();
 };
 
 textHashtags.addEventListener('input', onHashTagInput);
 
-const onError = () => {
-  errorForm;
-};
-
-const setFormSubmit = (onSuccess) => {
-
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
-    const isValid = pristine.validate();
-    if (isValid) {
-      const formData = new FormData(evt.target);
-      request(onSuccess, onError, 'POST', formData);
-    }
-  });
-
-};
-
-export {textHashtags, form, setFormSubmit};
+export {textHashtags, pristine};

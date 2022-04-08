@@ -1,6 +1,7 @@
+import {request} from './fetch.js';
 import {openModalBody, closeModalBody} from './big-picture.js';
 import {closeOnModalEscKeydown} from './util.js';
-import {textHashtags, form} from './form-hashtags.js';
+import {textHashtags, pristine} from './form-hashtags.js';
 
 const BASE = 10;
 
@@ -23,6 +24,9 @@ const Slider = {
   STEP: 1,
 };
 
+const body = document.querySelector('body');
+
+const form = body.querySelector('#upload-select-image');
 const imgFile = form.querySelector('#upload-file');
 const imgEditor = form.querySelector('.img-upload__overlay');
 const closeButton = imgEditor.querySelector('#upload-cancel');
@@ -38,6 +42,13 @@ const preview = imgPreview.querySelector('img');
 const effectsLevel = form.querySelector('.img-upload__effect-level');
 const sliderElement = effectsLevel.querySelector('.effect-level__slider');
 const effectLevelValue = effectsLevel.querySelector('.effect-level__value');
+
+const templateSuccess = body.querySelector('#success').content.querySelector('.success');
+//const containerSuccess = body.querySelector('.success');
+//const successButton = containerSuccess.querySelector('.success__button');
+const templateError = body.querySelector('#error').content.querySelector('.error');
+//const containerError = body.querySelector('.error');
+//const errorButton = containerError.querySelector('.error__button');
 
 
 let currentEffect = '';
@@ -128,27 +139,28 @@ const effects = {
 
   chrome: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `grayscale(${parseInt(effectLevelValue.value, BASE) * Options.RATIO})`;
+    return `grayscale(${(parseInt(effectLevelValue.value, BASE) * Options.RATIO).toFixed(1)})`;  // 6 * 0.01 = 0.1
   },
 
   sepia: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `sepia(${parseInt(effectLevelValue.value, BASE) * Options.RATIO})`;
+    return `sepia(${(parseInt(effectLevelValue.value, BASE) * Options.RATIO).toFixed(1)})`;
   },
 
   marvin: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `invert(${Math.floor(effectLevelValue.value)}%)`;
+    return `invert(${Math.floor(effectLevelValue.value).toFixed(0)}%)`;
   },
 
   phobos: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `blur(${(parseInt(effectLevelValue.value, BASE) * Options.BLUR_MAX_SCALE) * Options.RATIO}px)`;
+    return `blur(${((parseInt(effectLevelValue.value, BASE) * Options.BLUR_MAX_SCALE) * Options.RATIO).toFixed(1)}px)`;
   },
 
   heat: () => {
     effectsLevel.classList.remove('visually-hidden');
-    return `brightness(${(parseInt(effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE) * Options.RATIO})`;
+    return `brightness(${((parseInt(effectLevelValue.value < 10 ? 1 + effectLevelValue.value : effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE) * Options.RATIO).toFixed(1)})`;
+    //return `brightness(${(parseInt(effectLevelValue.value < 100 ? effectLevelValue.value++ : effectLevelValue.value, BASE) * Options.BRIGHTNESS_MAX_SCALE) * Options.RATIO})`;
   },
 
 };
@@ -173,6 +185,7 @@ const onEffectsListClick = (evt) => {
     preview.classList.add(target.classList[1]);
 
     preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
+
   }
 
 };
@@ -191,8 +204,50 @@ noUiSlider.create(sliderElement, {
 
 sliderElement.noUiSlider.on('change', () => {
   effectLevelValue.value = sliderElement.noUiSlider.get();
-
   preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
+  console.log(preview.style.filter);
 });
 
-export {closeEditorForm};
+
+const forRequestMessageForm = (template, container) => {
+  const similarListFragment = document.createDocumentFragment();
+  const fragmentElement = template.cloneNode(true);
+
+  similarListFragment.appendChild(fragmentElement);
+  container.appendChild(similarListFragment);
+
+  fragmentElement.style.zIndex = 100;
+
+  fragmentElement.querySelector('button').addEventListener('click', (evt) => {
+    evt.preventDefault();
+    fragmentElement.remove();
+  });
+
+  const onRequestMessageEscKeydown = (evt) => closeOnModalEscKeydown(evt, () =>fragmentElement.remove());
+  document.addEventListener('keydown', onRequestMessageEscKeydown);
+};
+
+
+const onError = () => {
+  forRequestMessageForm(templateError, body);
+  // клонирование сообщения
+
+};
+
+
+const onSuccess = () => {
+  // очистить форму сбросить фильтры вернуть зум закрыть форму
+  closeEditorForm();
+
+  // клонирование сообщения
+  forRequestMessageForm(templateSuccess, body);
+};
+
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  if (pristine.validate()) {
+    request(onSuccess, onError, 'POST', new FormData(evt.target));
+  }
+});
