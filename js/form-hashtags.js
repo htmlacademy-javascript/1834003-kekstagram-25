@@ -1,7 +1,12 @@
 const MAX_HASHTAGS = 5;
 const MAX_SYMBOLS = 20;
 
-const form = document.querySelector('#upload-select-image');
+const body = document.querySelector('body');
+
+const form = body.querySelector('#upload-select-image');
+
+const textHashtags = form.querySelector('.text__hashtags');
+const button = form.querySelector('#upload-submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__item',
@@ -12,8 +17,6 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error',
 });
 
-const textHashtags = form.querySelector('.text__hashtags');
-const button = form.querySelector('#upload-submit');
 
 let errorMessage = '';
 const error = () => errorMessage;
@@ -81,11 +84,9 @@ pristine.addValidator(textHashtags, hashtagsHandler, error);
 
 
 const onHashTagInput = () => {
-  if (pristine.validate()) {
-    button.disabled = false;
-  } else {button.disabled = true;}
+  button.disabled = !pristine.validate();
 };
 
 textHashtags.addEventListener('input', onHashTagInput);
 
-export {textHashtags, form};
+export {textHashtags, pristine};

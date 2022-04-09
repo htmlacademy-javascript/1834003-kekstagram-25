@@ -1,6 +1,21 @@
-import {photos} from './data.js';
+import {showAlert} from './util.js';
+import {request} from './fetch.js';
 import {renderPhotos} from './creating-pictures.js';
 import './form.js';
-import './form-hashtags.js';
 
-renderPhotos(photos());
+
+const PHOTO_COUNT = 25;
+
+const onError = () => {
+  showAlert('Нет доступа к серверу. Попробуйте еще раз.');
+};
+
+let userPhotos = [];
+
+const onSuccess = (data) => {
+  userPhotos = data.slice();
+
+  renderPhotos(userPhotos.slice(0, PHOTO_COUNT));
+};
+
+request(onSuccess, onError, 'GET');
