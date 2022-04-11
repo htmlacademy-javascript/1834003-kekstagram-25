@@ -16,25 +16,25 @@ const socialFooterText = bigPicture.querySelector('.social__footer-text');
 
 
 let totalComments = COMMENTS_STEP;
-let arrayCommets = [];
+let arrayComments = [];
 
 
 const appendComments = () => {
 
   containerComments.innerHTML = '';
 
-  totalComments = (totalComments > arrayCommets.length) ? arrayCommets.length : totalComments;
+  totalComments = (totalComments > arrayComments.length) ? arrayComments.length : totalComments;
 
-  const comments = arrayCommets.slice(0, totalComments);
+  const comments = arrayComments.slice(0, totalComments);
 
-  if (arrayCommets.length <= COMMENTS_STEP || totalComments >= arrayCommets.length) {
+  if (arrayComments.length <= COMMENTS_STEP || totalComments >= arrayComments.length) {
     hideBlockCommentsLoader.classList.add('hidden');
   } else {
     hideBlockCommentsLoader.classList.remove('hidden');
   }
 
-  const descriptionsDeclinationNumber = getDeclinationNumber(arrayCommets.length, 'комментария', 'комментариев', 'комментариев');
-  hideBlockCommentCount.textContent = `${totalComments} из ${arrayCommets.length} ${descriptionsDeclinationNumber}`;
+  const descriptionsDeclinationNumber = getDeclinationNumber(arrayComments.length, 'комментария', 'комментариев', 'комментариев');
+  hideBlockCommentCount.textContent = `${totalComments} из ${arrayComments.length} ${descriptionsDeclinationNumber}`;
 
   const similarListFragment = document.createDocumentFragment();
 
@@ -73,7 +73,7 @@ const closeBigPicture = () => {
   closeModalBody();
 
   totalComments = COMMENTS_STEP;
-  arrayCommets = [];
+  arrayComments = [];
   socialFooterText.value = '';
 };
 
@@ -110,7 +110,7 @@ const showBigPicture = (photo) => {
   bigPictureLikes.textContent = photo.likes;
   bigPictureCaption.textContent = photo.description;
 
-  arrayCommets = photo.comments;
+  arrayComments = photo.comments;
 
   appendComments();
 

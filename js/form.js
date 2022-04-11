@@ -24,10 +24,16 @@ const Slider = {
   STEP: 1,
 };
 
+const ButtonText = {
+  DISABLED_TEXT: 'ПУБЛИКУЮ...',
+  NONE_DISABLED_TEXT: 'ОПУБЛИКОВАТЬ',
+};
+
 const body = document.querySelector('body');
 
 const form = body.querySelector('#upload-select-image');
 const imgFile = form.querySelector('#upload-file');
+const submitButton = form.querySelector('#upload-submit');
 const imgEditor = form.querySelector('.img-upload__overlay');
 const closeButton = imgEditor.querySelector('#upload-cancel');
 
@@ -232,12 +238,28 @@ const showAlertMessage = (template, container, overlayClass) => {
   document.addEventListener('keydown', onRequestMessageEscKeydown);
 };
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = ButtonText.DISABLED_TEXT;
+};
 
-const onError = () => showAlertMessage(templateError, body, 'error');
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = ButtonText.NONE_DISABLED_TEXT;
+};
+
+
+const onError = () => {
+  showAlertMessage(templateError, body, 'error');
+
+  unblockSubmitButton();
+};
 
 
 const onSuccess = () => {
   closeEditorForm();
+
+  unblockSubmitButton();
 
   showAlertMessage(templateSuccess, body, 'success');
 };
@@ -247,6 +269,8 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   if (pristine.validate()) {
+    blockSubmitButton();
+
     request(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 });

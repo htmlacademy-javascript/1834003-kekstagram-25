@@ -44,6 +44,6 @@ const showAlert = (message) => {
   setTimeout(() => {
     alertContainer.remove();
   }, ALERT_SHOW_TIME);
-}
+};
 
 export {closeOnModalEscKeydown, getDeclinationNumber, showAlert};

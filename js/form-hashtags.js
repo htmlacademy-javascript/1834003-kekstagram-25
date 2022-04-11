@@ -6,7 +6,7 @@ const body = document.querySelector('body');
 const form = body.querySelector('#upload-select-image');
 
 const textHashtags = form.querySelector('.text__hashtags');
-const button = form.querySelector('#upload-submit');
+const submitButton = form.querySelector('#upload-submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__item',
@@ -84,7 +84,7 @@ pristine.addValidator(textHashtags, hashtagsHandler, error);
 
 
 const onHashTagInput = () => {
-  button.disabled = !pristine.validate();
+  submitButton.disabled = !pristine.validate();
 };
 
 textHashtags.addEventListener('input', onHashTagInput);
