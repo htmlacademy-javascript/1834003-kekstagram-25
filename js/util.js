@@ -1,18 +1,24 @@
 const BUTTON_KEYBOARD = 'Escape';
 const ALERT_SHOW_TIME = 5000;
+const TIMEOUT_RERENDER_DELAY = 500;
+
 
 const isEscapeKey = (evt) => evt.key === BUTTON_KEYBOARD;
 
+
 const closeOnModalEscKeydown = (evt, cb) => {
+
   if (isEscapeKey(evt)) {
     cb();
   }
 };
 
+
 const getDeclinationNumber = (number, nominative, genitiveSingular, genitivePlural) => {
 
   if (number > 10 && (Math.round((number % 100) / 10)) === 1) {
     return genitivePlural;
+
   } else {
     switch(number % 10) {
       case 1: return nominative;
@@ -20,10 +26,11 @@ const getDeclinationNumber = (number, nominative, genitiveSingular, genitivePlur
       case 3:
       case 4: return genitiveSingular;
     }
+
     return genitivePlural;
   }
-
 };
+
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
@@ -46,4 +53,25 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {closeOnModalEscKeydown, getDeclinationNumber, showAlert};
+
+const shuffleArray = (array) => {
+
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
+};
+
+
+const debounce = (cb) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb.apply(this, rest), TIMEOUT_RERENDER_DELAY);
+  };
+};
+
+export {closeOnModalEscKeydown, getDeclinationNumber, showAlert, shuffleArray, debounce};

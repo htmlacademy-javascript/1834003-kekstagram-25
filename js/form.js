@@ -25,17 +25,17 @@ const Slider = {
 };
 
 const ButtonText = {
-  DISABLED_TEXT: 'ПУБЛИКУЮ...',
-  NONE_DISABLED_TEXT: 'ОПУБЛИКОВАТЬ',
+  BUTTON_DISABLED: 'ПУБЛИКУЮ...',
+  BUTTON_TEXT: 'ОПУБЛИКОВАТЬ',
 };
 
 const body = document.querySelector('body');
 
 const form = body.querySelector('#upload-select-image');
 const imgFile = form.querySelector('#upload-file');
-const submitButton = form.querySelector('#upload-submit');
+const buttonForm = form.querySelector('#upload-submit');
 const imgEditor = form.querySelector('.img-upload__overlay');
-const closeButton = imgEditor.querySelector('#upload-cancel');
+const buttonModal = imgEditor.querySelector('#upload-cancel');
 
 const scaleValue = imgEditor.querySelector('.scale__control--value');
 const вuttonMinus = imgEditor.querySelector('.scale__control--smaller');
@@ -84,7 +84,7 @@ const onEditorFormEscKeydown = (evt) => {
 const onCloseEditorForm = () => {
   closeEditorForm();
 
-  closeButton.removeEventListener('click', onCloseEditorForm);
+  buttonModal.removeEventListener('click', onCloseEditorForm);
   document.removeEventListener('keydown', onEditorFormEscKeydown);
 };
 
@@ -97,7 +97,7 @@ imgFile.addEventListener('change', () => {
 
   scaleValue.value = `${Zoom.MAX}%`;
 
-  closeButton.addEventListener('click', onCloseEditorForm);
+  buttonModal.addEventListener('click', onCloseEditorForm);
   document.addEventListener('keydown', onEditorFormEscKeydown);
 });
 
@@ -239,13 +239,13 @@ const showAlertMessage = (template, container, overlayClass) => {
 };
 
 const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = ButtonText.DISABLED_TEXT;
+  buttonForm.disabled = true;
+  buttonForm.textContent = ButtonText.BUTTON_DISABLED;
 };
 
 const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = ButtonText.NONE_DISABLED_TEXT;
+  buttonForm.disabled = false;
+  buttonForm.textContent = ButtonText.BUTTON_TEXT;
 };
 
 

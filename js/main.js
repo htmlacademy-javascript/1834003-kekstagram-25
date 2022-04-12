@@ -1,12 +1,10 @@
 import {showAlert} from './util.js';
 import {request} from './fetch.js';
 import {renderPhotos} from './creating-pictures.js';
-import {openImgFilters, onEffectsFiltersClick} from './filters.js';
+import {openImgFilters} from './filters.js';
 import './form.js';
 
 const PHOTO_COUNT = 25;
-
-const imgFiltersForm = document.querySelector('img-filters__form');
 
 
 const onError = () => {
@@ -14,16 +12,16 @@ const onError = () => {
 };
 
 let userPhotos = [];
+const getPhotos = () => userPhotos;
 
 const onSuccess = (data) => {
   userPhotos = data.slice();
 
   openImgFilters();
 
-
-  renderPhotos(userPhotos.slice(0, PHOTO_COUNT));
-
-  imgFiltersForm.addEventListener('click', onEffectsFiltersClick);
+  renderPhotos(getPhotos().slice(0, PHOTO_COUNT));
 };
 
 request(onSuccess, onError, 'GET');
+
+export {getPhotos};
