@@ -11,6 +11,7 @@ const request = (onSuccess, onError, method, formData) => {
       body: formData,
     },
   )
+
     .then((response) => response.json())
     .then((data) => {
       onSuccess(data);
