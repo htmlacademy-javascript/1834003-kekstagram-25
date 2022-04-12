@@ -6,7 +6,7 @@ const body = document.querySelector('body');
 const form = body.querySelector('#upload-select-image');
 
 const textHashtags = form.querySelector('.text__hashtags');
-const button = form.querySelector('#upload-submit');
+const buttonForm = form.querySelector('#upload-submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__item',
@@ -19,7 +19,9 @@ const pristine = new Pristine(form, {
 
 
 let errorMessage = '';
+
 const error = () => errorMessage;
+
 
 const hashtagsHandler = (value) => {
   errorMessage = '';
@@ -76,7 +78,6 @@ const hashtagsHandler = (value) => {
 
     return !isInvalid;
   });
-
 };
 
 
@@ -84,7 +85,7 @@ pristine.addValidator(textHashtags, hashtagsHandler, error);
 
 
 const onHashTagInput = () => {
-  button.disabled = !pristine.validate();
+  buttonForm.disabled = !pristine.validate();
 };
 
 textHashtags.addEventListener('input', onHashTagInput);

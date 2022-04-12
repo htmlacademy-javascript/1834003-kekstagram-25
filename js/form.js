@@ -24,12 +24,18 @@ const Slider = {
   STEP: 1,
 };
 
+const ButtonText = {
+  BUTTON_DISABLED: 'ПУБЛИКУЮ...',
+  BUTTON_TEXT: 'ОПУБЛИКОВАТЬ',
+};
+
 const body = document.querySelector('body');
 
 const form = body.querySelector('#upload-select-image');
 const imgFile = form.querySelector('#upload-file');
+const buttonForm = form.querySelector('#upload-submit');
 const imgEditor = form.querySelector('.img-upload__overlay');
-const closeButton = imgEditor.querySelector('#upload-cancel');
+const buttonModal = imgEditor.querySelector('#upload-cancel');
 
 const scaleValue = imgEditor.querySelector('.scale__control--value');
 const вuttonMinus = imgEditor.querySelector('.scale__control--smaller');
@@ -78,7 +84,7 @@ const onEditorFormEscKeydown = (evt) => {
 const onCloseEditorForm = () => {
   closeEditorForm();
 
-  closeButton.removeEventListener('click', onCloseEditorForm);
+  buttonModal.removeEventListener('click', onCloseEditorForm);
   document.removeEventListener('keydown', onEditorFormEscKeydown);
 };
 
@@ -91,7 +97,7 @@ imgFile.addEventListener('change', () => {
 
   scaleValue.value = `${Zoom.MAX}%`;
 
-  closeButton.addEventListener('click', onCloseEditorForm);
+  buttonModal.addEventListener('click', onCloseEditorForm);
   document.addEventListener('keydown', onEditorFormEscKeydown);
 });
 
@@ -232,12 +238,28 @@ const showAlertMessage = (template, container, overlayClass) => {
   document.addEventListener('keydown', onRequestMessageEscKeydown);
 };
 
+const blockSubmitButton = () => {
+  buttonForm.disabled = true;
+  buttonForm.textContent = ButtonText.BUTTON_DISABLED;
+};
 
-const onError = () => showAlertMessage(templateError, body, 'error');
+const unblockSubmitButton = () => {
+  buttonForm.disabled = false;
+  buttonForm.textContent = ButtonText.BUTTON_TEXT;
+};
+
+
+const onError = () => {
+  showAlertMessage(templateError, body, 'error');
+
+  unblockSubmitButton();
+};
 
 
 const onSuccess = () => {
   closeEditorForm();
+
+  unblockSubmitButton();
 
   showAlertMessage(templateSuccess, body, 'success');
 };
@@ -247,6 +269,8 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   if (pristine.validate()) {
+    blockSubmitButton();
+
     request(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 });

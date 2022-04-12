@@ -4,37 +4,37 @@ const COMMENTS_STEP = 5;
 
 const body = document.querySelector('body');
 const bigPicture = body.querySelector('.big-picture');
-const hideBlockCommentCount = bigPicture.querySelector('.social__comment-count');
-const hideBlockCommentsLoader = bigPicture.querySelector('.comments-loader');
+const blockCommentCount = bigPicture.querySelector('.social__comment-count');
+const blockCommentsLoader = bigPicture.querySelector('.comments-loader');
 const bigPicturePhoto = bigPicture.querySelector('.big-picture__img > img');
 const bigPictureLikes = bigPicture.querySelector('.likes-count');
 const bigPictureCaption = bigPicture.querySelector('.social__caption');
-const closeButton = bigPicture.querySelector('.big-picture__cancel');
+const buttonModalPicture = bigPicture.querySelector('.big-picture__cancel');
 const containerComments = bigPicture.querySelector('.social__comments');
 const templateComment = containerComments.querySelector('.social__comment');
 const socialFooterText = bigPicture.querySelector('.social__footer-text');
 
 
 let totalComments = COMMENTS_STEP;
-let arrayCommets = [];
+let arrayComments = [];
 
 
 const appendComments = () => {
 
   containerComments.innerHTML = '';
 
-  totalComments = (totalComments > arrayCommets.length) ? arrayCommets.length : totalComments;
+  totalComments = (totalComments > arrayComments.length) ? arrayComments.length : totalComments;
 
-  const comments = arrayCommets.slice(0, totalComments);
+  const comments = arrayComments.slice(0, totalComments);
 
-  if (arrayCommets.length <= COMMENTS_STEP || totalComments >= arrayCommets.length) {
-    hideBlockCommentsLoader.classList.add('hidden');
+  if (arrayComments.length <= COMMENTS_STEP || totalComments >= arrayComments.length) {
+    blockCommentsLoader.classList.add('hidden');
   } else {
-    hideBlockCommentsLoader.classList.remove('hidden');
+    blockCommentsLoader.classList.remove('hidden');
   }
 
-  const descriptionsDeclinationNumber = getDeclinationNumber(arrayCommets.length, 'комментария', 'комментариев', 'комментариев');
-  hideBlockCommentCount.textContent = `${totalComments} из ${arrayCommets.length} ${descriptionsDeclinationNumber}`;
+  const descriptionsDeclinationNumber = getDeclinationNumber(arrayComments.length, 'комментария', 'комментариев', 'комментариев');
+  blockCommentCount.textContent = `${totalComments} из ${arrayComments.length} ${descriptionsDeclinationNumber}`;
 
   const similarListFragment = document.createDocumentFragment();
 
@@ -55,7 +55,6 @@ const appendComments = () => {
   });
 
   containerComments.appendChild(similarListFragment);
-
 };
 
 
@@ -73,7 +72,7 @@ const closeBigPicture = () => {
   closeModalBody();
 
   totalComments = COMMENTS_STEP;
-  arrayCommets = [];
+  arrayComments = [];
   socialFooterText.value = '';
 };
 
@@ -84,11 +83,10 @@ const onModalEscKeydown = (evt) => {
 
     closeBigPicture();
 
-    hideBlockCommentsLoader.removeEventListener('click', onCommentsButtonLoader);
+    blockCommentsLoader.removeEventListener('click', onCommentsButtonLoader);
 
     document.removeEventListener('keydown', onModalEscKeydown);
   });
-
 };
 
 
@@ -96,9 +94,9 @@ const onCloseBigPictureClick = () => {
   closeBigPicture();
 
   document.removeEventListener('keydown', onModalEscKeydown);
-  closeButton.removeEventListener('click', onCloseBigPictureClick);
+  buttonModalPicture.removeEventListener('click', onCloseBigPictureClick);
 
-  hideBlockCommentsLoader.removeEventListener('click', onCommentsButtonLoader);
+  blockCommentsLoader.removeEventListener('click', onCommentsButtonLoader);
 };
 
 
@@ -110,16 +108,16 @@ const showBigPicture = (photo) => {
   bigPictureLikes.textContent = photo.likes;
   bigPictureCaption.textContent = photo.description;
 
-  arrayCommets = photo.comments;
+  arrayComments = photo.comments;
 
   appendComments();
 
   bigPicture.classList.remove('hidden');
   openModalBody();
 
-  hideBlockCommentsLoader.addEventListener('click', onCommentsButtonLoader);
+  blockCommentsLoader.addEventListener('click', onCommentsButtonLoader);
 
-  closeButton.addEventListener('click', onCloseBigPictureClick);
+  buttonModalPicture.addEventListener('click', onCloseBigPictureClick);
   document.addEventListener('keydown', onModalEscKeydown);
 };
 

@@ -28,4 +28,11 @@ const renderPhotos = (photos) => {
   containerPictures.appendChild(similarListFragment);
 };
 
-export {renderPhotos};
+const removePictures = () => {
+  const photos = containerPictures.querySelectorAll('.picture');
+  if (photos) {
+    photos.forEach((photo) => photo.remove());
+  }
+};
+
+export {renderPhotos, removePictures};
