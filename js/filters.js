@@ -30,7 +30,9 @@ const onButtonClick = debounce((evt) => {
   }
 
   evt.target.classList.add('img-filters__button--active');
+
   removePictures();
+
   renderPhotos(createFilters[evt.target.id]());
 });
 

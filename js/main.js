@@ -12,6 +12,7 @@ const onError = () => {
 };
 
 let userPhotos = [];
+
 const getPhotos = () => userPhotos;
 
 const onSuccess = (data) => {

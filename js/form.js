@@ -2,6 +2,7 @@ import {request} from './fetch.js';
 import {openModalBody, closeModalBody} from './big-picture.js';
 import {closeOnModalEscKeydown} from './util.js';
 import {textHashtags, pristine} from './form-hashtags.js';
+import {getImgUploadFile} from './form-uploads-photos.js';
 
 const BASE = 10;
 
@@ -52,7 +53,6 @@ const effectLevelValue = effectsLevel.querySelector('.effect-level__value');
 const templateSuccess = body.querySelector('#success').content.querySelector('.success');
 const templateError = body.querySelector('#error').content.querySelector('.error');
 
-
 let currentEffect = '';
 
 const closeEditorForm = () => {
@@ -75,9 +75,7 @@ const onEditorFormEscKeydown = (evt) => {
       closeEditorForm();
       document.removeEventListener('keydown', onEditorFormEscKeydown);
     }
-
   });
-
 };
 
 
@@ -96,6 +94,8 @@ imgFile.addEventListener('change', () => {
   effectsLevel.classList.add('visually-hidden');
 
   scaleValue.value = `${Zoom.MAX}%`;
+
+  getImgUploadFile();
 
   buttonModal.addEventListener('click', onCloseEditorForm);
   document.addEventListener('keydown', onEditorFormEscKeydown);
@@ -186,7 +186,6 @@ const onEffectsListClick = (evt) => {
 
     preview.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
   }
-
 };
 
 effectsList.addEventListener('click', onEffectsListClick);
@@ -225,7 +224,6 @@ const showAlertMessage = (template, container, overlayClass) => {
     if (evt.target.tagName === 'SECTION' || evt.target.tagName === 'BUTTON') {
       overlay.remove();
     }
-
   };
 
   overlay.addEventListener('click', onOverlayClick);
